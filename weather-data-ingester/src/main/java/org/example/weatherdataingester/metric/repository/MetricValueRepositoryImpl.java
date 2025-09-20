@@ -8,7 +8,6 @@ import org.example.weatherdataingester.exception.InvalidSensorException;
 import org.example.weatherdataingester.sensor.entity.Sensor;
 import org.example.weatherdataingester.sensor.repository.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -32,25 +31,25 @@ public class MetricValueRepositoryImpl implements MetricValueRepositoryCustom {
 
         List<Long> sensors = sensorRepository.findAll().stream().map(Sensor::getId).toList();
 
-        if (sensorIds == null || sensorIds.isEmpty()){
+        if (sensorIds == null || sensorIds.isEmpty()) {
             sensorIds = sensors;
         }
 
         for (Long sensorId : sensorIds) {
-            if (!sensors.contains(sensorId)){
+            if (!sensors.contains(sensorId)) {
                 throw new InvalidSensorException("Sensor id " + sensorId + " does not exist");
             }
         }
 
 
         String jpql = """
-            SELECT mv.sensor.id, mv.type, %s(mv.value)
-            FROM MetricValue mv
-            WHERE (mv.sensor.id IN :sensorIds)
-              AND mv.type IN :metrics
-              AND date(mv.timestamp) BETWEEN :start AND :end
-            GROUP BY mv.sensor.id, mv.type
-            """.formatted(statistic.name().toLowerCase());
+                SELECT mv.sensor.id, mv.type, %s(mv.value)
+                FROM MetricValue mv
+                WHERE (mv.sensor.id IN :sensorIds)
+                  AND mv.type IN :metrics
+                  AND date(mv.timestamp) BETWEEN :start AND :end
+                GROUP BY mv.sensor.id, mv.type
+                """.formatted(statistic.name().toLowerCase());
 
         Query query = entityManager.createQuery(jpql);
         query.setParameter("sensorIds", sensorIds);
