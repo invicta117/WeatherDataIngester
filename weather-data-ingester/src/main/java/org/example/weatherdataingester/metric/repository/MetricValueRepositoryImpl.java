@@ -32,15 +32,16 @@ public class MetricValueRepositoryImpl implements MetricValueRepositoryCustom {
 
         List<Long> sensors = sensorRepository.findAll().stream().map(Sensor::getId).toList();
 
+        if (sensorIds == null || sensorIds.isEmpty()){
+            sensorIds = sensors;
+        }
+
         for (Long sensorId : sensorIds) {
             if (!sensors.contains(sensorId)){
                 throw new InvalidSensorException("Sensor id " + sensorId + " does not exist");
             }
         }
 
-        if (sensorIds.isEmpty()){
-            sensorIds = sensors;
-        }
 
         String jpql = """
             SELECT mv.sensor.id, mv.type, %s(mv.value)

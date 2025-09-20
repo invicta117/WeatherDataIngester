@@ -20,7 +20,7 @@ public class MetricQueryRequest {
 
     private StatisticType statistic = StatisticType.AVG;
 
-    private LocalDate startDate = LocalDate.now().minusDays(1);
+    private LocalDate startDate = LocalDate.now();
 
     private LocalDate endDate = LocalDate.now();
 }
