@@ -9,7 +9,6 @@ import org.example.weatherdataingester.metric.service.WeatherDataService;
 import org.example.weatherdataingester.sensor.config.SensorConfig;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.util.*;
@@ -23,15 +22,19 @@ public class SensorSchedulerService {
             .map(mt -> mt.name().toLowerCase())
             .collect(Collectors.toUnmodifiableSet());
     private final WeatherDataService weatherDataService;
-    private final RestTemplate restTemplate = new RestTemplate();
     private final SensorConfig sensorConfig;
+    private final SensorFetchService sensorFetchService;
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 10000)
     public void fetchWeatherData() {
 
         for (SensorConfig.SensorSource sensor : sensorConfig.getSensors()) {
             try {
-                Map<String, Object> response = restTemplate.getForObject(sensor.getUrl(), Map.class);
+                Map<String, Object> response = sensorFetchService.fetchSensorData(sensor.getUrl());
+                if (response.isEmpty()) {
+                    log.warn("No data found for sensor {}", sensor.getUrl());
+                    continue;
+                }
                 MetricBatchRequest batch = mapToMetricBatchRequest(sensor.getId(), response);
                 weatherDataService.saveMetrics(batch);
                 log.info("Fetched weather data: {}", response);

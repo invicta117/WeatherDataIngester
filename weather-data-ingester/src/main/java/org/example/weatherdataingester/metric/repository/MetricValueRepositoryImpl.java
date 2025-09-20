@@ -41,7 +41,6 @@ public class MetricValueRepositoryImpl implements MetricValueRepositoryCustom {
             }
         }
 
-
         String jpql = """
                 SELECT mv.sensor.id, mv.type, %s(mv.value)
                 FROM MetricValue mv
