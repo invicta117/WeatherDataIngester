@@ -1,0 +1,11 @@
+app:
+  sensors:
+    - id: 0
+      name: Sherkin Island Station
+      url: http://localhost:8081/api/shirken-island
+    - id: 1
+      name: Malin Head Station
+      url: http://localhost:8082/api/malin-head
+    - id: 2
+      name: Mace Head Station
+      url: http://localhost:8083/api/mace-head

@@ -1,7 +1,9 @@
 package org.example.weatherdataingester.metric.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.common.model.MetricType;
 import org.example.weatherdataingester.sensor.entity.Sensor;
 

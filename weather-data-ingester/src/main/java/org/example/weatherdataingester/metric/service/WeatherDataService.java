@@ -1,12 +1,12 @@
 package org.example.weatherdataingester.metric.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.weatherdataingester.exception.InvalidSensorException;
 import org.example.weatherdataingester.metric.dto.MetricBatchRequest;
 import org.example.weatherdataingester.metric.dto.MetricData;
 import org.example.weatherdataingester.metric.entity.MetricValue;
-import org.example.weatherdataingester.sensor.entity.Sensor;
-import org.example.weatherdataingester.exception.InvalidSensorException;
 import org.example.weatherdataingester.metric.repository.MetricValueRepository;
+import org.example.weatherdataingester.sensor.entity.Sensor;
 import org.example.weatherdataingester.sensor.repository.SensorRepository;
 import org.springframework.stereotype.Service;
 

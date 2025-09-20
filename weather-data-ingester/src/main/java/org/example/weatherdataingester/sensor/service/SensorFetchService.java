@@ -17,11 +17,12 @@ import java.util.function.Supplier;
 @Service
 public class SensorFetchService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final CircuitBreakerRegistry circuitBreakerRegistry;
     private final RetryRegistry retryRegistry;
 
-    public SensorFetchService(CircuitBreakerRegistry circuitBreakerRegistry, RetryRegistry retryRegistry) {
+    public SensorFetchService(RestTemplate restTemplate, CircuitBreakerRegistry circuitBreakerRegistry, RetryRegistry retryRegistry) {
+        this.restTemplate = restTemplate;
         this.circuitBreakerRegistry = circuitBreakerRegistry;
         this.retryRegistry = retryRegistry;
     }
@@ -36,7 +37,6 @@ public class SensorFetchService {
                 CircuitBreaker.decorateSupplier(circuitBreaker,
                         () -> restTemplate.getForObject(url, Map.class));
 
-        // Wrap with retry
         Supplier<Map<String, Object>> withRetry = Retry.decorateSupplier(retry, decoratedSupplier);
 
         return Try.ofSupplier(withRetry)
