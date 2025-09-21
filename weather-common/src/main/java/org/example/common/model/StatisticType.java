@@ -2,12 +2,11 @@ package org.example.common.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-@Schema(enumAsRef = true, description = "Supported metric types")
 public enum StatisticType {
-    MIN("min"),
-    MAX("max"),
-    SUM("sum"),
-    AVG("avg");
+    MIN("MIN"),
+    MAX("MAX"),
+    SUM("SUM"),
+    AVG("AVG");
 
     private final String label;
 

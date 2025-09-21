@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/metrics/query")
+@RequestMapping("/api/v1/metrics/query")
 @Tag(name = "Metrics API", description = "Query weather sensor data")
 @RequiredArgsConstructor
 public class MetricController {
