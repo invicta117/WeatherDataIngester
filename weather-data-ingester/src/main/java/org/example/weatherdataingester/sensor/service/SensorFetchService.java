@@ -17,6 +17,8 @@ import java.util.function.Supplier;
 @Service
 public class SensorFetchService {
 
+    public static final String BREAKER_PREFIX = "sensor-";
+    public static final String DEFAULT = "default";
     private final RestTemplate restTemplate;
     private final CircuitBreakerRegistry circuitBreakerRegistry;
     private final RetryRegistry retryRegistry;
@@ -28,10 +30,10 @@ public class SensorFetchService {
     }
 
     public Map<String, Object> fetchSensorData(String url) {
-        String breakerName = "sensor-" + url.hashCode();
+        String breakerName = BREAKER_PREFIX + url.hashCode();
 
-        CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(breakerName, "default");
-        Retry retry = retryRegistry.retry(breakerName, "default");
+        CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(breakerName, DEFAULT);
+        Retry retry = retryRegistry.retry(breakerName, DEFAULT);
 
         Supplier<Map<String, Object>> decoratedSupplier =
                 CircuitBreaker.decorateSupplier(circuitBreaker,

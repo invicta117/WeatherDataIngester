@@ -16,6 +16,19 @@ import java.util.List;
 @Repository
 public class MetricValueRepositoryImpl implements MetricValueRepositoryCustom {
 
+    public static final String SENSOR_IDS = "sensorIds";
+    public static final String METRICS = "metrics";
+    public static final String START = "start";
+    public static final String END = "end";
+    public static final String QUERY = """
+            SELECT mv.sensor.id, mv.type, %s(mv.value)
+            FROM MetricValue mv
+            WHERE (mv.sensor.id IN :sensorIds)
+              AND mv.type IN :metrics
+              AND date(mv.timestamp) BETWEEN :start AND :end
+            GROUP BY mv.sensor.id, mv.type
+            """;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -41,20 +54,13 @@ public class MetricValueRepositoryImpl implements MetricValueRepositoryCustom {
             }
         }
 
-        String jpql = """
-                SELECT mv.sensor.id, mv.type, %s(mv.value)
-                FROM MetricValue mv
-                WHERE (mv.sensor.id IN :sensorIds)
-                  AND mv.type IN :metrics
-                  AND date(mv.timestamp) BETWEEN :start AND :end
-                GROUP BY mv.sensor.id, mv.type
-                """.formatted(statistic.name().toLowerCase());
+        String jpql = QUERY.formatted(statistic.name().toLowerCase());
 
         Query query = entityManager.createQuery(jpql);
-        query.setParameter("sensorIds", sensorIds);
-        query.setParameter("metrics", metrics);
-        query.setParameter("start", start);
-        query.setParameter("end", end);
+        query.setParameter(SENSOR_IDS, sensorIds);
+        query.setParameter(METRICS, metrics);
+        query.setParameter(START, start);
+        query.setParameter(END, end);
 
         return query.getResultList();
     }

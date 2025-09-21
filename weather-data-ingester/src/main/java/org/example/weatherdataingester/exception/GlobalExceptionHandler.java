@@ -12,19 +12,22 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    public static final String ERROR = "error";
+    public static final String MESSAGE = "message";
+
     @ExceptionHandler(InvalidDateRangeException.class)
     public ResponseEntity<Map<String, String>> handleInvalidDateRange(InvalidDateRangeException ex) {
         Map<String, String> body = new HashMap<>();
-        body.put("error", "Invalid date range");
-        body.put("message", ex.getMessage());
+        body.put(ERROR, "Invalid date range");
+        body.put(MESSAGE, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
     @ExceptionHandler(InvalidSensorException.class)
     public ResponseEntity<Map<String, String>> handleInvalidDateRange(InvalidSensorException ex) {
         Map<String, String> body = new HashMap<>();
-        body.put("error", "Invalid sensor id");
-        body.put("message", ex.getMessage());
+        body.put(ERROR, "Invalid sensor id");
+        body.put(MESSAGE, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 

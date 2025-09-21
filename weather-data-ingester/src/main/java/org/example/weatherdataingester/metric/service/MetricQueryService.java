@@ -17,6 +17,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MetricQueryService {
 
+    public static final int MAX_DAYS = 31;
+    public static final int MIN_DAYS = 0;
+    public static final int SENSOR_ID_POSITION = 0;
+    public static final int METRIC_TYPE_POSITION = 1;
+    public static final int METRIC_VALUE_POSITION = 2;
     private final MetricValueRepository metricValueRepository;
 
     public Map<Long, Map<String, Double>> queryMetrics(MetricQueryRequest req) {
@@ -28,7 +33,7 @@ public class MetricQueryService {
         }
 
         long daysBetween = ChronoUnit.DAYS.between(start, end);
-        if (daysBetween < 0 || daysBetween > 31) {
+        if (daysBetween < MIN_DAYS || daysBetween > MAX_DAYS) {
             throw new InvalidDateRangeException("Date range must be between 1 day and 1 month");
         }
 
@@ -44,13 +49,13 @@ public class MetricQueryService {
 
         Map<Long, Map<String, Double>> result = new HashMap<>();
         for (Object[] row : rows) {
-            Long sensorId = (Long) row[0];
+            Long sensorId = (Long) row[SENSOR_ID_POSITION];
             if (!result.containsKey(sensorId)) {
                 HashMap<String, Double> metricsSensor = new HashMap<>();
                 result.put(sensorId, metricsSensor);
             }
-            MetricType metric = (MetricType) row[1];
-            Double value = (Double) row[2];
+            MetricType metric = (MetricType) row[METRIC_TYPE_POSITION];
+            Double value = (Double) row[METRIC_VALUE_POSITION];
             result.get(sensorId).put(metric.name(), value);
         }
         return result;
