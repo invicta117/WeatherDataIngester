@@ -3,9 +3,9 @@ package org.example.weatherdataingester.metric.service;
 import org.example.weatherdataingester.metric.dto.MetricBatchRequest;
 import org.example.weatherdataingester.metric.dto.MetricData;
 import org.example.weatherdataingester.metric.entity.MetricValue;
+import org.example.weatherdataingester.metric.repository.MetricValueRepository;
 import org.example.weatherdataingester.sensor.entity.Sensor;
 import org.example.weatherdataingester.sensor.repository.SensorRepository;
-import org.example.weatherdataingester.metric.repository.MetricValueRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Testcontainers
-@ActiveProfiles("test")   // this is key
+@ActiveProfiles("test")
 class WeatherDataServiceIT {
 
     @Container
@@ -32,6 +32,12 @@ class WeatherDataServiceIT {
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
+    @Autowired
+    private WeatherDataService weatherDataService;
+    @Autowired
+    private SensorRepository sensorRepository;
+    @Autowired
+    private MetricValueRepository metricValueRepository;
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -39,15 +45,6 @@ class WeatherDataServiceIT {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
     }
-
-    @Autowired
-    private WeatherDataService weatherDataService;
-
-    @Autowired
-    private SensorRepository sensorRepository;
-
-    @Autowired
-    private MetricValueRepository metricValueRepository;
 
     @BeforeEach
     void setUp() {
@@ -59,7 +56,6 @@ class WeatherDataServiceIT {
 
     @Test
     void testSaveMetrics_savesDataCorrectly() {
-        // given
         MetricBatchRequest request = new MetricBatchRequest();
         request.setSensorId(1L);
         request.setTimestamp(Instant.now());
@@ -70,10 +66,8 @@ class WeatherDataServiceIT {
 
         request.setMetrics(List.of(metric));
 
-        // when
         weatherDataService.saveMetrics(request);
 
-        // then
         List<MetricValue> saved = metricValueRepository.findAll();
         assertThat(saved).hasSize(1);
         assertThat(saved.get(0).getSensor().getId()).isEqualTo(1L);

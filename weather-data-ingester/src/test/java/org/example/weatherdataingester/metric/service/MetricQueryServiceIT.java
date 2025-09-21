@@ -4,8 +4,8 @@ import org.example.common.model.MetricType;
 import org.example.common.model.StatisticType;
 import org.example.weatherdataingester.metric.dto.MetricQueryRequest;
 import org.example.weatherdataingester.metric.entity.MetricValue;
-import org.example.weatherdataingester.sensor.entity.Sensor;
 import org.example.weatherdataingester.metric.repository.MetricValueRepository;
+import org.example.weatherdataingester.sensor.entity.Sensor;
 import org.example.weatherdataingester.sensor.repository.SensorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Testcontainers
-@ActiveProfiles("test") // -> loads application-test.properties
+@ActiveProfiles("test")
 class MetricQueryServiceIT {
 
     @Container
@@ -35,6 +35,13 @@ class MetricQueryServiceIT {
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
+    @Autowired
+    private MetricQueryService metricQueryService;
+    @Autowired
+    private SensorRepository sensorRepository;
+    @Autowired
+    private MetricValueRepository metricValueRepository;
+    private Sensor sensor;
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -42,17 +49,6 @@ class MetricQueryServiceIT {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
     }
-
-    @Autowired
-    private MetricQueryService metricQueryService;
-
-    @Autowired
-    private SensorRepository sensorRepository;
-
-    @Autowired
-    private MetricValueRepository metricValueRepository;
-
-    private Sensor sensor;
 
     @BeforeEach
     void setUp() {

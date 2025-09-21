@@ -4,12 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.example.common.model.StatisticType;
 import org.example.weatherdataingester.exception.InvalidSensorException;
-import org.example.weatherdataingester.metric.repository.MetricValueRepositoryImpl;
 import org.example.weatherdataingester.sensor.entity.Sensor;
 import org.example.weatherdataingester.sensor.repository.SensorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-@ActiveProfiles("test")   // this is key
+@ActiveProfiles("test")
 class MetricValueRepositoryImplTest {
 
     @InjectMocks

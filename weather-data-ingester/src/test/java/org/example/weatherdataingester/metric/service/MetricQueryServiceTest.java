@@ -7,17 +7,20 @@ import org.example.weatherdataingester.metric.dto.MetricQueryRequest;
 import org.example.weatherdataingester.metric.repository.MetricValueRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-@ActiveProfiles("test")   // this is key
+@ActiveProfiles("test")
 class MetricQueryServiceTest {
 
     @Mock

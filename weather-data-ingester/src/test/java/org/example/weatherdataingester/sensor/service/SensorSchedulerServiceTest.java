@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ActiveProfiles("test")   // this is key
+@ActiveProfiles("test")
 class SensorSchedulerServiceTest {
 
     @Mock

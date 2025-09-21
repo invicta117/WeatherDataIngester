@@ -19,7 +19,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest
 @Testcontainers
-@ActiveProfiles("test")   // this is key
+@ActiveProfiles("test")
 class SensorSchedulerServiceIT {
 
     @Container
@@ -27,6 +27,12 @@ class SensorSchedulerServiceIT {
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
+    @Autowired
+    private SensorSchedulerService schedulerService;
+    @Autowired
+    private MetricValueRepository metricValueRepository;
+    @MockBean
+    private SensorFetchService sensorFetchService;
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -34,15 +40,6 @@ class SensorSchedulerServiceIT {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
     }
-
-    @Autowired
-    private SensorSchedulerService schedulerService;
-
-    @Autowired
-    private MetricValueRepository metricValueRepository;
-
-    @MockBean
-    private SensorFetchService sensorFetchService;
 
     @Test
     void fetchWeatherData_shouldSaveMetricsToDatabase() {
