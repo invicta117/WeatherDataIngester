@@ -14,33 +14,42 @@ provide data to the central `weather-data-ingester` service.
 ## Running locally
 
 Prerequisites
--	Java 21+
--	Maven 3.9+
--	Docker (for Postgres via Docker Compose)
+
+- Java 21+
+- Maven 3.9+
+- Docker (for Postgres via Docker Compose)
 
 From the root directory please install all modules (Docker is required for tests)
+
 ```
 mvn clean install
 ```
+
 Start the Postgres docker container
+
 ```
 docker compose up -d
 ```
+
 Start weather station sensors in separate terminals (Will allow us to test fault tolerance later)
+
 ```
 mvn -pl mace-head spring-boot:run
 ```
+
 ```
 mvn -pl malin-head spring-boot:run
 ```
+
 ```
 mvn -pl sherkin-island spring-boot:run
 ```
+
 In a new terminal start main weather-data-ingester service (main service)
+
 ```
 mvn -pl weather-data-ingester spring-boot:run
 ```
-
 
 ## Features of Service
 
@@ -50,7 +59,8 @@ The API endpoints provided by the service are documented using OpenAPI docs via 
 
 [API Documentation](http://localhost:8080/swagger-ui/index.html)
 
-Please run the `weather-data-ingester` service before attempting to reach the documentation.
+Please run the `weather-data-ingester` service before attempting to reach the documentation. A sample request is
+provided in the OpenAPI spec.
 
 ### Scheduling
 
@@ -73,7 +83,7 @@ sequenceDiagram
     participant User
     participant WeatherDataIngester
     participant Database
-    
+
     alt Valid request
         User ->> WeatherDataIngester: Sends valid request (POST /api/v1/metrics/query)
         WeatherDataIngester --> WeatherDataIngester: Validate request payload
