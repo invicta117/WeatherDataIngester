@@ -19,6 +19,8 @@ Prerequisites
 - Maven 3.9+
 - Docker (for Postgres via Docker Compose)
 
+Please first ensure the Docker daemon is running.
+
 From the root directory please install all modules (Docker is required for tests)
 
 ```
