@@ -53,6 +53,26 @@ In a new terminal start main weather-data-ingester service (main service)
 mvn -pl weather-data-ingester spring-boot:run
 ```
 
+You can now query the service using the OpenAPI spec below which provides a UI to interact with the service or alternatively using the following command:
+
+```
+curl -X 'POST' \
+  'http://localhost:8080/api/v1/metrics/query' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "sensorIds": [
+    0
+  ],
+  "metrics": [
+    "TEMPERATURE"
+  ],
+  "statistic": "MIN",
+  "startDate": "2025-09-21",
+  "endDate": "2025-09-21"
+}'
+```
+
 ## Features of Service
 
 ### Documentation
