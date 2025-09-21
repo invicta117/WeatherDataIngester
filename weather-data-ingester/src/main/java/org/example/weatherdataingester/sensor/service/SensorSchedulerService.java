@@ -31,7 +31,7 @@ public class SensorSchedulerService {
         for (SensorConfig.SensorSource sensor : sensorConfig.getSensors()) {
             try {
                 Map<String, Object> response = sensorFetchService.fetchSensorData(sensor.getUrl());
-                if (response.isEmpty()) {
+                if (response == null || response.isEmpty()) {
                     log.warn("No data found for sensor {}", sensor.getUrl());
                     continue;
                 }

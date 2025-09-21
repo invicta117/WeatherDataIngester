@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableConfigurationProperties(SensorConfig.class)
+
 public class WeatherDataIngesterApplication {
 
     public static void main(String[] args) {
